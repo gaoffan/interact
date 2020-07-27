@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录界面</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+<!--    <link rel="stylesheet" th:href="@{/css/me.css}" href="../static/css/me.css">-->
+
+</head>
+<body>
+<form id="login_form"></form>
+Username:<label for="username"></label><input id="username" type="text" placeholder="请输入用户名" maxlength="12"><br>
+Password:<label for="password"></label><input id="password" type="password" placeholder="请输入密码" maxlength="12"><br>
+<button id="login">登  陆</button>
+</body>
+
+<script>
+    let username = document.getElementById("username");
+    let password = document.getElementById("password");
+    let login = document.getElementById("login");
+    login.addEventListener("click",function () {
+        let formData=JSON.stringify({
+            "username":username.value,
+            "password":password.value
+        });
+        console.log(typeof(formData));
+        console.log(formData);
+        console.log(username.value);
+        fetch(
+            '/user/login',
+            {
+                method: 'POST',
+                body: formData,
+                dataType: "json",
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }
+        )
+            .then(function(response) {
+                return response.json();
+            }).then(function(myJson) {
+            if(myJson.status===0){
+                window.location.href='/user?' + 'username='+username.value;
+            }
+        });
+    })
+</script>
+</html>
