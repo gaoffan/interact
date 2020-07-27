@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class CheckController {
     @Autowired
     GroupService groupService;
-    @GetMapping("/check")
+    @GetMapping("/checkgroup")
     public List<Group> check(){
         List<Group> groups= groupService.check();
         return groups;
