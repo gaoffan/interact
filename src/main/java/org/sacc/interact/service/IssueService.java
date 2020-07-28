@@ -1,16 +1,18 @@
 package org.sacc.interact.service;
 
 import com.github.pagehelper.PageInfo;
+import org.sacc.interact.pojo.IssueParam;
+import org.sacc.interact.pojo.IssueReplyParam;
 
 public interface IssueService {
 
-    public boolean issue(String content,boolean flag,int user_id,int groupId);
-    public boolean issueReply(String content,boolean flag,int userId,int issueId);
+    public int issue(IssueParam issueParam);
+    public int issueReply(IssueReplyParam issueReplyParam);
     public PageInfo getIssueList(int pageNum, int pageSize, int groupId);
     public PageInfo getIssueReplyList(int pageNum, int pageSize, int issueId);
-    public boolean updateIssue(String content,int issueId);
-    public boolean updateIssueReply(String content,int issueReplyId);
-    public boolean deleteIssue(int issueId);
-    public boolean deleteIssueReply(int issueReplyId);
+    public int updateIssue(IssueParam issueParam);
+    public int updateIssueReply(IssueReplyParam issueReplyParam);
+    public int deleteIssue(int issueId);
+    public int deleteIssueReply(int issueReplyId);
 
     }

@@ -32,23 +32,23 @@ public interface IssueMapper {
     List<IssueReply> getIssueReplyList(int issueId);
 
     @Insert("INSERT INTO issue (user_id,content,created_at,updated_at,group_id) VALUES (#{userId},#{content},#{createTime},#{updateTime},#{groupId})")
-    void addIssue(Issue issue);
+    int addIssue(Issue issue);
 
     @Insert("INSERT INTO issue_reply (user_id,content,created_at,updated_at,issue_id) VALUES (#{userId},#{content},#{createTime},#{updateTime},#{issueId})")
-    void addIssueReply(IssueReply issueReply);
+    int addIssueReply(IssueReply issueReply);
 
     @Update("UPDATE issue SET content=#{content},updated_at=#{updateTime} WHERE id=#{id}")
-    void updateIssue(Issue issue);
+    int updateIssue(Issue issue);
 
     @Update("UPDATE issue_reply SET content=#{content},updated_at=#{updateTime} WHERE id=#{id}")
-    void updateIssueReply(IssueReply issueReply);
+    int updateIssueReply(IssueReply issueReply);
 
     @Delete("DELETE FROM issue WHERE id=#{id}")
-    void deleteIssue(int id);
+    int deleteIssue(int id);
 
     @Delete("DELETE FROM issue_reply WHERE id=#{id}")
-    void deleteIssueReply(int id);
+    int deleteIssueReply(int id);
 
     @Delete("DELETE FROM issue_reply WHERE issue_id=#{issueId}")
-    void deleteIssueReplyByIssueId(int issueId);
+    int deleteIssueReplyByIssueId(int issueId);
 }
