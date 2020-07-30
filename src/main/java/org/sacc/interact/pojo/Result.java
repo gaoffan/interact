@@ -8,7 +8,7 @@ public class Result {
 
     private String message;
 
-    private  Object data;
+    private Object data;
 
     public Result() {
     }
