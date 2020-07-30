@@ -1,17 +1,17 @@
 # Interactive Teaching for SACC
-技术栈：Spring Boot + MySQL(MyBatis) + Redis + Shiro
+技术栈：Spring Boot + MySQL(MyBatis) + Redis + Spring Security
 
 先配置一下application.properties里面的数据库账号密码，再在本机建立interact数据库（注意编码为utf8mb4），之后启动后会自动进行数据库的迁移（Flyway），建库的sql文件在db/migration下，无需手动导入。
 
 ## 大纲
 
-- [ ] 用户管理
+- [x] 用户管理
   - [ ] 注册
   - [ ] 登录
   - [ ] 忘记密码
   - [ ] 个人中心
   - [ ] 权限控制
-- [ ] 首页
+- [x] 首页
 - [ ] 组页
   - [ ] 课程显示
   - [ ] 授课签到

@@ -36,6 +36,9 @@ public class ResponseVo<T> {
         return new ResponseVo<>(0,"success");
     }
 
+    public static <T> ResponseVo<T> success(String msg){
+        return new ResponseVo<>(0,msg);
+    }
     public static <T>ResponseVo<T> error(){
         return new ResponseVo<>(-1,"error");
     }
