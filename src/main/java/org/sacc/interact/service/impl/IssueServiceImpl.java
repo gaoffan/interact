@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.sacc.interact.mapper.IssueMapper;
 import org.sacc.interact.pojo.Issue;
+import org.sacc.interact.pojo.IssueParam;
 import org.sacc.interact.pojo.IssueReply;
+import org.sacc.interact.pojo.IssueReplyParam;
 import org.sacc.interact.service.IssueService;
 import org.sacc.interact.util.ToolUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,96 +23,60 @@ public class IssueServiceImpl implements IssueService {
     IssueMapper issueMapper;
 
     @Override
-    public boolean issue(String content, boolean flag,int userId,int groupId) {
-
-        try {
-            issueMapper.addIssue(ToolUtils.setIssue(content,flag,userId,groupId));
-            return true;
-        }catch (Exception e){
-            System.out.println("sad");
-            return false;
-        }
+    public int issue(IssueParam issueParam) {
+        return issueMapper.addIssue(ToolUtils.setIssue(issueParam));
     }
 
     @Override
-    public boolean issueReply(String content,boolean flag,int userId,int issueId){
-
-        try {
-            issueMapper.addIssueReply(ToolUtils.setIssueReply(content, flag, userId,issueId));
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    public int issueReply(IssueReplyParam issueReplyParam) {
+        return issueMapper.addIssueReply(ToolUtils.setIssueReply(issueReplyParam));
     }
 
     @Override
-    public PageInfo getIssueList(int pageNum,int pageSize,int groupId){
-        try{
-            PageHelper.startPage(pageNum, pageSize);
-            List<Issue> list=issueMapper.getIssueList(groupId);
-            return new PageInfo<>(list);
-        }catch (Exception e){
-            return null;
-        }
+    public PageInfo getIssueList(int pageNum, int pageSize, int groupId) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Issue> list = issueMapper.getIssueList(groupId);
+        return new PageInfo<>(list);
+
+
     }
 
     @Override
     public PageInfo getIssueReplyList(int pageNum, int pageSize, int issueId) {
-        try{
-            PageHelper.startPage(pageNum, pageSize);
-            List<IssueReply> list=issueMapper.getIssueReplyList(issueId);
-            return new PageInfo<>(list);
-        }catch (Exception e){
-            return null;
-        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<IssueReply> list = issueMapper.getIssueReplyList(issueId);
+        return new PageInfo<>(list);
     }
 
     @Override
-    public boolean updateIssue(String content,int issueId){
-        Issue issue=new Issue();
-        issue.setId(issueId);
-        issue.setContent(content);
+    public int updateIssue(IssueParam issueParam) {
+        Issue issue = new Issue();
+        issue.setId(issueParam.getId());
+        issue.setContent(issueParam.getContent());
         issue.setUpdateTime(LocalDateTime.now());
-        try {
-            issueMapper.updateIssue(issue);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+        return issueMapper.updateIssue(issue);
+
     }
 
     @Override
-    public boolean updateIssueReply(String content,int issueReplyId){
-        IssueReply issueReply=new IssueReply();
-        issueReply.setId(issueReplyId);
-        issueReply.setContent(content);
+    public int updateIssueReply(IssueReplyParam issueReplyParam) {
+        IssueReply issueReply = new IssueReply();
+        issueReply.setId(issueReplyParam.getId());
+        issueReply.setContent(issueReplyParam.getContent());
         issueReply.setUpdateTime(LocalDateTime.now());
-        try {
-            issueMapper.updateIssueReply(issueReply);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+        return issueMapper.updateIssueReply(issueReply);
+
     }
 
     @Override
-    public boolean deleteIssue(int issueId){
-        try{
-            issueMapper.deleteIssue(issueId);
-            issueMapper.deleteIssueReplyByIssueId(issueId);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    public int deleteIssue(int issueId) {
+        int result=issueMapper.deleteIssue(issueId);
+        issueMapper.deleteIssueReplyByIssueId(issueId);   //删除问题，相关回答也删除
+        return result;
     }
 
     @Override
-    public boolean deleteIssueReply(int issueReplyId){
-        try{
-            issueMapper.deleteIssueReply(issueReplyId);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    public int deleteIssueReply(int issueReplyId) {
+        return issueMapper.deleteIssueReply(issueReplyId);
     }
 }
