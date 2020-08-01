@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sacc.interact.mapper.HomeworkSubmissionMapper">
+  <resultMap id="BaseResultMap" type="org.sacc.interact.entity.HomeworkSubmission">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="homework_id" jdbcType="INTEGER" property="homeworkId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="content" jdbcType="LONGVARBINARY" property="content" />
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, homework_id, user_id, content, remark, is_show, created_at, update_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework_submission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from homework_submission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.sacc.interact.entity.HomeworkSubmission">
+    insert into homework_submission (id, homework_id, user_id,
+      content, remark, is_show,
+      created_at, update_at)
+    values (#{id,jdbcType=INTEGER}, #{homeworkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+      #{content,jdbcType=LONGVARBINARY}, #{remark,jdbcType=LONGVARCHAR}, #{isShow,jdbcType=INTEGER},
+      #{createdAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sacc.interact.entity.HomeworkSubmission">
+    insert into homework_submission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="homeworkId != null">
+        homework_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="updateAt != null">
+        update_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="homeworkId != null">
+        #{homeworkId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null">
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sacc.interact.entity.HomeworkSubmission">
+    update homework_submission
+    <set>
+      <if test="homeworkId != null">
+        homework_id = #{homeworkId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null">
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sacc.interact.entity.HomeworkSubmission">
+    update homework_submission
+    set homework_id = #{homeworkId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARBINARY},
+      remark = #{remark,jdbcType=LONGVARCHAR},
+      is_show = #{isShow,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework_submission
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+</mapper>
