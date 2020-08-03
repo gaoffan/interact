@@ -11,11 +11,11 @@ import java.util.List;
  */
 
 public interface HomeworkService {
-    RestResult<Homework> findByLessonId(Integer lessonId);
+    Homework findByLessonId(Integer lessonId);
 
-    RestResult<List<Homework>> findByGroupId(Integer groupId);
+    List<Homework> findByGroupId(Integer groupId);
 
-    RestResult publish(Homework homework);
+    boolean publish(Homework homework);
 
-    RestResult update(Homework homework);
+    boolean update(Homework homework);
 }

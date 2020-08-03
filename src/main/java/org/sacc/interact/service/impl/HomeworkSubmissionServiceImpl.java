@@ -1,22 +1,18 @@
 package org.sacc.interact.service.impl;
 
-import org.apache.commons.io.FilenameUtils;
 import org.sacc.interact.entity.Homework;
 import org.sacc.interact.entity.HomeworkSubmission;
+import org.sacc.interact.exception.Business;
+import org.sacc.interact.exception.BusinessException;
 import org.sacc.interact.mapper.HomeworkMapper;
 import org.sacc.interact.mapper.HomeworkSubmissionMapper;
-import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.HomeworkSubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by 林夕
@@ -32,7 +28,7 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
     private HomeworkMapper homeworkMapper;
 
     @Override
-    public RestResult<HomeworkSubmission> uploadZip(MultipartFile multipartFile, Integer homeworkId, Integer userId) throws IOException {
+    public boolean uploadZip(MultipartFile multipartFile, Integer homeworkId, Integer userId) throws IOException {
         /*String extension = "." + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         long size = multipartFile.getSize();
         //生成新的文件名称
@@ -48,26 +44,30 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
         multipartFile.transferTo(new File(dateDirPath, newFileName));*/
         if (isEffective(homeworkId)) {
             byte[] bytes = multipartFile.getBytes();
-            return upload(bytes, userId, homeworkId);
+            if(upload(bytes, userId, homeworkId)) return true;
+            else throw new BusinessException(Business.INTERNAL_SERVER_ERROR);
         }
         else
-            return RestResult.error(-1,"已过提交时间无法提交");
+            throw new BusinessException(Business.NOT_EFFECTIVE);
     }
 
     @Override
-    public RestResult<HomeworkSubmission> uploadText(String text, Integer homeworkId, Integer userId) {
+    public boolean uploadText(String text, Integer homeworkId, Integer userId) {
         if (isEffective(homeworkId)) {
             byte[] bytes = text.getBytes();
-            return upload(bytes, userId, homeworkId);
+            if(upload(bytes, userId, homeworkId)) return true;
+            else throw new BusinessException(Business.INTERNAL_SERVER_ERROR);
         }
-        else
-            return RestResult.error(-1,"已过提交时间无法提交");
+        else {
+            throw new BusinessException(Business.NOT_EFFECTIVE);
+            /*return RestResult.error(-1,"已过提交时间无法提交");*/
+        }
     }
 
     /**
      * 判断是为上传还是更新
      * */
-    private RestResult<HomeworkSubmission> upload(byte[] bytes,Integer userId,Integer homeworkId){
+    private boolean upload(byte[] bytes,Integer userId,Integer homeworkId){
         HomeworkSubmission homeworkSubmission = homeworkSubmissionMapper.selectByUserId(userId);
         if(homeworkSubmission==null){
             HomeworkSubmission h = new HomeworkSubmission();
@@ -77,19 +77,13 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
             h.setUpdateAt(new Date());
             h.setContent(bytes);
             int i = homeworkSubmissionMapper.insertSelective(h);
-            if (i == 1) {
-                return RestResult.success(200, "OK");
-            } else
-                return RestResult.error(500, "服务器错误");
+            return i == 1;
         }
         else {
             homeworkSubmission.setUpdateAt(new Date());
             homeworkSubmission.setContent(bytes);
             int i = homeworkSubmissionMapper.updateByPrimaryKeySelective(homeworkSubmission);
-            if (i == 1) {
-                return RestResult.success(200, "OK");
-            } else
-                return RestResult.error(500, "服务器错误");
+            return i == 1;
         }
     }
 

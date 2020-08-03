@@ -11,7 +11,7 @@ import java.io.IOException;
  * Date 2020/7/30 10:35
  */
 public interface HomeworkSubmissionService {
-    RestResult<HomeworkSubmission> uploadZip(MultipartFile file, Integer homeworkId, Integer userId) throws IOException;
+    boolean uploadZip(MultipartFile file, Integer homeworkId, Integer userId) throws IOException;
 
-    RestResult<HomeworkSubmission> uploadText(String text, Integer homeworkId, Integer userId);
+    boolean uploadText(String text, Integer homeworkId, Integer userId);
 }
