@@ -2,8 +2,8 @@ package org.sacc.interact.service.impl;
 
 import org.sacc.interact.entity.Homework;
 import org.sacc.interact.mapper.HomeworkMapper;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.HomeworkService;
-import org.sacc.interact.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,38 +20,38 @@ public class HomeworkServiceImpl implements HomeworkService {
     private HomeworkMapper homeworkMapper;
 
     @Override
-    public ResponseVo<Homework> findByLessonId(Integer lessonId) {
+    public RestResult<Homework> findByLessonId(Integer lessonId) {
         Homework homework = homeworkMapper.selectByLessonId(lessonId);
         if(homework!=null)
-            return ResponseVo.success(homework);
+            return RestResult.success(homework);
         else
-            return ResponseVo.error("该lesson_id不存在");
+            return RestResult.error(-1,"该lesson_id不存在");
     }
 
     @Override
-    public ResponseVo<List<Homework>> findByGroupId(Integer groupId) {
+    public RestResult<List<Homework>> findByGroupId(Integer groupId) {
         List<Homework> homeworkList = homeworkMapper.selectByGroupId(groupId);
         if(homeworkList!=null)
-            return ResponseVo.success(homeworkList);
+            return RestResult.success(homeworkList);
         else
-            return ResponseVo.error("该group_id不存在");
+            return RestResult.error(-1,"该group_id不存在");
     }
 
     @Override
-    public ResponseVo publish(Homework homework) {
+    public RestResult publish(Homework homework) {
         int i = homeworkMapper.insert(homework);
         if (i==1)
-            return ResponseVo.success();
+            return RestResult.success(200,"OK");
         else
-            return ResponseVo.error();
+            return RestResult.error(500,"服务器错误");
     }
 
     @Override
-    public ResponseVo update(Homework homework) {
+    public RestResult update(Homework homework) {
         int i = homeworkMapper.updateByPrimaryKeySelective(homework);
         if(i==1)
-            return ResponseVo.success();
+            return RestResult.success(200,"OK");
         else
-            return ResponseVo.error();
+            return RestResult.error(500,"服务器错误");
     }
 }

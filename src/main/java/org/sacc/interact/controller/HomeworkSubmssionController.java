@@ -1,11 +1,14 @@
 package org.sacc.interact.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.FilenameUtils;
 import org.sacc.interact.entity.HomeworkSubmission;
 import org.sacc.interact.mapper.HomeworkSubmissionMapper;
 import org.sacc.interact.model.RestResult;
+import org.sacc.interact.model.UserInfo;
 import org.sacc.interact.service.HomeworkSubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,28 +25,27 @@ import java.util.UUID;
  * Date 2020/7/30 10:34
  */
 
-@Controller
+@RestController
 public class HomeworkSubmssionController {
 
     @Autowired
     private HomeworkSubmissionService homeworkSubmissionService;
 
-    @GetMapping("/homeworkSubmission")
-    public String hello(){
-        return "hello";
-    }
-
+    @ApiOperation("上传文本类型作业")
     @PostMapping("/homeworkSubmission/uploadText")
-    @ResponseBody
-    public RestResult<HomeworkSubmission> UploadText(@RequestParam("text") String text){
-        System.out.println("-----------------------------------------");
-        return homeworkSubmissionService.uploadText(text);
+    public RestResult<HomeworkSubmission> UploadText(@RequestParam("text") String text,
+                                                     @RequestParam("homeworkId") Integer homeworkId,
+                                                     Authentication authentication){
+        UserInfo userInfo = (UserInfo)authentication.getPrincipal();
+        return homeworkSubmissionService.uploadText(text,homeworkId,userInfo.getId());
     }
 
+    @ApiOperation("上传压缩包类型作业")
     @PostMapping("/homeworkSubmission/uploadZip")
-    @ResponseBody
-    public RestResult<HomeworkSubmission> UploadZip(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-        System.out.println("-----------------------------------------");
-        return homeworkSubmissionService.uploadZip(multipartFile);
+    public RestResult<HomeworkSubmission> UploadZip(@RequestParam("file") MultipartFile multipartFile,
+                                                    @RequestParam("homeworkId") Integer homeworkId,
+                                                    Authentication authentication) throws IOException {
+        UserInfo userInfo = (UserInfo)authentication.getPrincipal();
+        return homeworkSubmissionService.uploadZip(multipartFile,homeworkId,userInfo.getId());
     }
 }

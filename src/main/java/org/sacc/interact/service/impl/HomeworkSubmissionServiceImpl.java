@@ -1,7 +1,9 @@
 package org.sacc.interact.service.impl;
 
 import org.apache.commons.io.FilenameUtils;
+import org.sacc.interact.entity.Homework;
 import org.sacc.interact.entity.HomeworkSubmission;
+import org.sacc.interact.mapper.HomeworkMapper;
 import org.sacc.interact.mapper.HomeworkSubmissionMapper;
 import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.HomeworkSubmissionService;
@@ -26,8 +28,11 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
     @Autowired
     private HomeworkSubmissionMapper homeworkSubmissionMapper;
 
+    @Autowired
+    private HomeworkMapper homeworkMapper;
+
     @Override
-    public RestResult<HomeworkSubmission> uploadZip(MultipartFile multipartFile) throws IOException {
+    public RestResult<HomeworkSubmission> uploadZip(MultipartFile multipartFile, Integer homeworkId, Integer userId) throws IOException {
         /*String extension = "." + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         long size = multipartFile.getSize();
         //生成新的文件名称
@@ -41,39 +46,59 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
             dataDir.mkdirs();
         }
         multipartFile.transferTo(new File(dateDirPath, newFileName));*/
-        byte[] bytes = multipartFile.getBytes();
-        return upload(bytes,1);
+        if (isEffective(homeworkId)) {
+            byte[] bytes = multipartFile.getBytes();
+            return upload(bytes, userId, homeworkId);
+        }
+        else
+            return RestResult.error(-1,"已过提交时间无法提交");
     }
 
     @Override
-    public RestResult<HomeworkSubmission> uploadText(String text) {
-        byte[] bytes = text.getBytes();
-        return upload(bytes,2);
+    public RestResult<HomeworkSubmission> uploadText(String text, Integer homeworkId, Integer userId) {
+        if (isEffective(homeworkId)) {
+            byte[] bytes = text.getBytes();
+            return upload(bytes, userId, homeworkId);
+        }
+        else
+            return RestResult.error(-1,"已过提交时间无法提交");
     }
 
-    private RestResult<HomeworkSubmission> upload(byte[] bytes,Integer userId){
+    /**
+     * 判断是为上传还是更新
+     * */
+    private RestResult<HomeworkSubmission> upload(byte[] bytes,Integer userId,Integer homeworkId){
         HomeworkSubmission homeworkSubmission = homeworkSubmissionMapper.selectByUserId(userId);
         if(homeworkSubmission==null){
             HomeworkSubmission h = new HomeworkSubmission();
-            h.setUserId(1);
-            h.setHomeworkId(1);
+            h.setUserId(userId);
+            h.setHomeworkId(homeworkId);
             h.setCreatedAt(new Date());
             h.setUpdateAt(new Date());
             h.setContent(bytes);
             int i = homeworkSubmissionMapper.insertSelective(h);
             if (i == 1) {
-                return RestResult.success(0, "success");
+                return RestResult.success(200, "OK");
             } else
-                return RestResult.error(-1, "服务器错误");
+                return RestResult.error(500, "服务器错误");
         }
         else {
             homeworkSubmission.setUpdateAt(new Date());
             homeworkSubmission.setContent(bytes);
             int i = homeworkSubmissionMapper.updateByPrimaryKeySelective(homeworkSubmission);
             if (i == 1) {
-                return RestResult.success(0, "success");
+                return RestResult.success(200, "OK");
             } else
-                return RestResult.error(-1, "服务器错误");
+                return RestResult.error(500, "服务器错误");
         }
+    }
+
+    /**
+     * 判段此次提交是否在提交时间范围内
+     */
+    private boolean isEffective(Integer homeworkId){
+        Homework homework = homeworkMapper.selectByPrimaryKey(homeworkId);
+        Date date = new Date();
+        return homework.getTime().before(date) && homework.getDeadline().after(date);
     }
 }
