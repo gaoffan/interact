@@ -55,14 +55,16 @@ public class ToolUtils {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         while ((ze = zipInputStream.getNextEntry()) != null) {
-            String path=ze.getName();
-            String fileName=path.substring(path.lastIndexOf("/")+1);
-            if(name.equals(fileName)) {
-              //  InputStream inputStream = zipFile.getInputStream(ze);
-                byte[] byte_s = new byte[1024*1024*16];
-                int num = -1;
-                while ((num = zipInputStream.read(byte_s, 0, byte_s.length)) > -1) {//通过read方法来读取文件内容
-                    byteArrayOutputStream.write(byte_s, 0, num);
+            if(!ze.isDirectory()) {
+                String path = ze.getName();
+                String fileName = path.substring(path.lastIndexOf("/") + 1);
+                if (name.equals(fileName)) {
+                    //  InputStream inputStream = zipFile.getInputStream(ze);
+                    byte[] byte_s = new byte[1024 * 1024 * 16];
+                    int num = -1;
+                    while ((num = zipInputStream.read(byte_s, 0, byte_s.length)) > -1) {//通过read方法来读取文件内容
+                        byteArrayOutputStream.write(byte_s, 0, num);
+                    }
                 }
             }
         }
