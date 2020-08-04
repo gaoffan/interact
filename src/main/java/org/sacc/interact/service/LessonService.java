@@ -5,7 +5,7 @@ import org.sacc.interact.utils.Result;
 
 import java.util.List;
 
-public interface Service {
+public interface LessonService {
     Result addLesson(Lesson lesson);
     Result<List<Lesson>> getByGroupId(int groupId);
     Result updateLesson(Lesson lesson);

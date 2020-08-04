@@ -24,7 +24,7 @@ public interface LessonMapper {
     @Insert({"INSERT INTO lesson (name,group_id,`desc`,time,location,type,live_url,created_at,updated_at) VALUES (#{name},#{groupId},#{desc},#{time},#{location},#{type},#{liveUrl},#{createdTime},#{updatedTime})"})
     boolean insert(Lesson lesson);
 
-    @Update({"UPDATE lesson SET name=#{name},group_id=#{groupId},`desc`=#{desc},time=#{time},location=#{location},type=#{type},live_url=#{liveUrl},created_at=#{createdTime},updated_at=#{updatedTime} WHERE id=#{id}"})
+    @Update({"UPDATE lesson SET name=#{name},group_id=#{groupId},`desc`=#{desc},time=#{time},location=#{location},type=#{type},live_url=#{liveUrl},updated_at=#{updatedTime} WHERE id=#{id}"})
     boolean update(Lesson lesson);
 
     @Delete("DELETE FROM lesson WHERE id=#{id}")

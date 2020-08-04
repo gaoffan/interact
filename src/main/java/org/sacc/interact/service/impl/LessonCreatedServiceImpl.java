@@ -1,8 +1,9 @@
-package org.sacc.interact.service;
+package org.sacc.interact.service.impl;
 
 import org.apache.catalina.mapper.Mapper;
 import org.sacc.interact.entity.Lesson;
 import org.sacc.interact.mapper.LessonMapper;
+import org.sacc.interact.service.LessonService;
 import org.sacc.interact.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,12 +11,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @org.springframework.stereotype.Service
-public class LessonCreatedService implements Service{
+public class LessonCreatedServiceImpl implements LessonService {
     @Autowired
     private LessonMapper mapper;
 
     @Override
     public Result addLesson(Lesson lesson) {
+        lesson.setCreatedTime(LocalDateTime.now());
+        lesson.setUpdatedTime(LocalDateTime.now());
         if(mapper.insert(lesson)){
             return Result.success(200,"添加成功");
         }
@@ -37,6 +40,7 @@ public class LessonCreatedService implements Service{
 
     @Override
     public Result updateLesson(Lesson lesson) {
+        lesson.setUpdatedTime(LocalDateTime.now());
         if(mapper.update(lesson)){
             return Result.success(200,"更新成功");
         }
