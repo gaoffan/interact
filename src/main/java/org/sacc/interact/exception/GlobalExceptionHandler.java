@@ -78,7 +78,13 @@ public class GlobalExceptionHandler {
         return Result.error(ResultEnum.UNSUPPORTED_MEDIA_TYPE);
     }
 
-
+    /**
+     * 捕获作业提交异常
+     * */
+    @ExceptionHandler(value = BusinessException.class)
+    public Result businessException(BusinessException e){
+        return Result.error(e.getBusiness());
+    }
 
 
 }

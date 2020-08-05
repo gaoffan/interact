@@ -1,7 +1,7 @@
 package org.sacc.interact.service;
 
 import org.sacc.interact.entity.Homework;
-import org.sacc.interact.vo.ResponseVo;
+import org.sacc.interact.model.RestResult;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import java.util.List;
  */
 
 public interface HomeworkService {
-    ResponseVo<Homework> findByLessonId(Integer lessonId);
+    Homework findByLessonId(Integer lessonId);
 
-    ResponseVo<List<Homework>> findByGroupId(Integer groupId);
+    List<Homework> findByGroupId(Integer groupId);
 
-    ResponseVo publish(Homework homework);
+    boolean publish(Homework homework);
 
-    ResponseVo update(Homework homework);
+    boolean update(Homework homework);
 }
