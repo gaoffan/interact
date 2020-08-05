@@ -3,8 +3,8 @@ package org.sacc.interact.service.impl;
 import org.apache.catalina.mapper.Mapper;
 import org.sacc.interact.entity.Lesson;
 import org.sacc.interact.mapper.LessonMapper;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.LessonService;
-import org.sacc.interact.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -16,46 +16,46 @@ public class LessonCreatedServiceImpl implements LessonService {
     private LessonMapper mapper;
 
     @Override
-    public Result addLesson(Lesson lesson) {
+    public RestResult addLesson(Lesson lesson) {
         lesson.setCreatedTime(LocalDateTime.now());
         lesson.setUpdatedTime(LocalDateTime.now());
         if(mapper.insert(lesson)){
-            return Result.success(200,"添加成功");
+            return RestResult.success(200,"添加成功");
         }
         else{
-            return Result.error(400,"添加失败");
+            return RestResult.error(400,"添加失败");
         }
     }
 
     @Override
-    public Result<List<Lesson>> getByGroupId(int groupId) {
+    public RestResult<List<Lesson>> getByGroupId(int groupId) {
         List<Lesson> lessonList=mapper.getByGroupId(groupId);
         if(lessonList==null||lessonList.size()==0){
-            return Result.error(400,"该组别不存在");
+            return RestResult.error(400,"该组别不存在");
         }
         else{
-            return Result.success(200,lessonList);
+            return RestResult.success(200,lessonList);
         }
     }
 
     @Override
-    public Result updateLesson(Lesson lesson) {
+    public RestResult updateLesson(Lesson lesson) {
         lesson.setUpdatedTime(LocalDateTime.now());
         if(mapper.update(lesson)){
-            return Result.success(200,"更新成功");
+            return RestResult.success(200,"更新成功");
         }
         else{
-            return Result.error(400,"更新失败");
+            return RestResult.error(400,"更新失败");
         }
     }
 
     @Override
-    public Result deleteLesson(int id) {
+    public RestResult deleteLesson(int id) {
         if(mapper.delete(id)){
-            return Result.success(200,"删除成功");
+            return RestResult.success(200,"删除成功");
         }
         else{
-            return Result.error(400,"删除失败");
+            return RestResult.error(400,"删除失败");
         }
     }
 }

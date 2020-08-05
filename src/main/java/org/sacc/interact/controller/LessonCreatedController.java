@@ -2,8 +2,8 @@ package org.sacc.interact.controller;
 
 
 import org.sacc.interact.entity.Lesson;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.impl.LessonCreatedServiceImpl;
-import org.sacc.interact.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +21,14 @@ public class LessonCreatedController {
     }
 
     @PostMapping("/lesson/getByGroupId")
-    public Result<List<Lesson>> getByGroupId(@RequestParam("groupId") int groupId){
+    public RestResult<List<Lesson>> getByGroupId(@RequestParam("groupId") int groupId){
         return service.getByGroupId(groupId);
     }
 
     @PostMapping("/lesson/addLesson")
-    public Result insert(@Valid @RequestBody Lesson lesson, BindingResult bindingResult){
+    public RestResult insert(@Valid @RequestBody Lesson lesson, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return Result.error(400, bindingResult.getFieldError().getDefaultMessage());
+            return RestResult.error(400, bindingResult.getFieldError().getDefaultMessage());
         }
         else{
             return  service.addLesson(lesson);
@@ -36,9 +36,9 @@ public class LessonCreatedController {
     }
 
     @PostMapping("/lesson/update")
-    public Result<List<Lesson>> update(@Valid @RequestBody Lesson lesson,BindingResult bindingResult){
+    public RestResult<List<Lesson>> update(@Valid @RequestBody Lesson lesson,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return Result.error(400,bindingResult.getFieldError().getDefaultMessage());
+            return RestResult.error(400,bindingResult.getFieldError().getDefaultMessage());
         }
         else{
             service.updateLesson(lesson);
@@ -47,7 +47,7 @@ public class LessonCreatedController {
     }
 
     @PostMapping("/lesson/delete")
-    public Result delete(@RequestParam("id") int id){
+    public RestResult delete(@RequestParam("id") int id){
         return service.deleteLesson(id);
     }
 }

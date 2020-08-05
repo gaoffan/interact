@@ -1,13 +1,13 @@
 package org.sacc.interact.service;
 
 import org.sacc.interact.entity.Lesson;
-import org.sacc.interact.utils.Result;
+import org.sacc.interact.model.RestResult;
 
 import java.util.List;
 
 public interface LessonService {
-    Result addLesson(Lesson lesson);
-    Result<List<Lesson>> getByGroupId(int groupId);
-    Result updateLesson(Lesson lesson);
-    Result deleteLesson(int id);
+    RestResult addLesson(Lesson lesson);
+    RestResult<List<Lesson>> getByGroupId(int groupId);
+    RestResult updateLesson(Lesson lesson);
+    RestResult deleteLesson(int id);
 }
