@@ -2,6 +2,7 @@ package org.sacc.interact.controller;
 
 
 import com.github.pagehelper.PageInfo;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.pojo.IssueParam;
 import org.sacc.interact.pojo.IssueReplyParam;
 import org.sacc.interact.pojo.Result;
@@ -56,42 +57,42 @@ public class IssueController {
     }
 
     @GetMapping("/issueList")
-    public Result getIssueList(@RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
-                               @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam("groupId") int groupId) {
+    public RestResult getIssueList(@RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+                                   @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                   @RequestParam("groupId") int groupId) {
         PageInfo pageInfo=issueService.getIssueList(pageNum, pageSize, groupId);
         if (pageInfo == null) {
-            return Result.error("获取失败");
+            return RestResult.error("获取失败");
         }
-        return Result.success(pageInfo);
+        return RestResult.success(pageInfo);
     }
 
     @GetMapping("/issueReplyList")
-    public Result getIssueReplyList(@RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+    public RestResult getIssueReplyList(@RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
                                     @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                     @RequestParam("issueId") int issueId) {
         PageInfo pageInfo=issueService.getIssueReplyList(pageNum, pageSize, issueId);
         if (pageInfo == null) {
-            return Result.error("获取失败");
+            return RestResult.error("获取失败");
         }
-        return Result.success(pageInfo);
+        return RestResult.success(pageInfo);
     }
 
     @GetMapping("/deleteIssue")
-    public Result deleteIssue(@RequestParam("issueId")int issueId){
+    public RestResult deleteIssue(@RequestParam("issueId")int issueId){
         if(issueService.deleteIssue(issueId)!=0) {
-            return Result.success("删除成功");
+            return RestResult.success("删除成功");
         }else {
-            return Result.error("删除失败");
+            return RestResult.error("删除失败");
         }
     }
 
     @GetMapping("/deleteIssueReply")
-    public Result deleteIssueReply(@RequestParam("issueReplyId")int issueReplyId){
+    public RestResult deleteIssueReply(@RequestParam("issueReplyId")int issueReplyId){
         if(issueService.deleteIssueReply(issueReplyId)!=0) {
-            return Result.success("删除成功");
+            return RestResult.success("删除成功");
         }else {
-            return Result.error("删除失败");
+            return RestResult.error("删除失败");
         }
     }
 

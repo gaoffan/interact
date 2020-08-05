@@ -1,34 +1,23 @@
 package org.sacc.interact.conf;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.sacc.interact.pojo.Result;
+import org.sacc.interact.model.RestResult;
+import org.sacc.interact.util.ResponseUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.config.annotation.SecurityBuilder;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @author gaofan
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     private static final String[] NO_AUTH_LIST = {
@@ -45,51 +34,24 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors()
                 .and().formLogin().loginPage("/login").loginProcessingUrl("/login").usernameParameter("email")
-                .failureHandler(new failureHandler()).successHandler(new successHandler()).permitAll()
-                .and().exceptionHandling().authenticationEntryPoint(new authEntryPoint()).accessDeniedHandler(new deniedHandler())
+                //登录失败处理，返回json
+                .failureHandler((req,resp,e) -> ResponseUtil.restResponse(resp, HttpStatus.FORBIDDEN, RestResult.error(403,e.getMessage())))
+                //登录成功处理，返回json
+                .successHandler((req,resp,e) -> ResponseUtil.restResponse(resp, HttpStatus.OK, RestResult.success("登录成功")))
+                .permitAll()
+                .and().exceptionHandling()
+                //请求登录处理，改变默认跳转登录页
+                .authenticationEntryPoint((req,resp,e) -> ResponseUtil.restResponse(resp, HttpStatus.UNAUTHORIZED, RestResult.error(401,"请先登录")))
+                //没有权限访问
+                .accessDeniedHandler((req,resp,e) -> ResponseUtil.restResponse(resp, HttpStatus.FORBIDDEN, RestResult.error(403,"抱歉，你当前的身份无权访问")))
+                .and().sessionManagement().maximumSessions(1)
+                .expiredSessionStrategy(s -> ResponseUtil.restResponse(s.getResponse(), HttpStatus.FORBIDDEN, RestResult.error(499,"您的账号在别的地方登录，当前登录已失效")))
+                .and()
                 .and().logout().logoutUrl("/logout").permitAll()
                 .and().authorizeRequests().antMatchers(NO_AUTH_LIST).permitAll()
                 .and().authorizeRequests().anyRequest().authenticated();
+    }
 
-
-
-    }
-    class authEntryPoint implements AuthenticationEntryPoint{
-        @Override
-        public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-            Result result = new Result();
-            result.setCode(403);
-            result.setMessage("未登录");
-            httpServletResponse.getOutputStream().write(new ObjectMapper().writeValueAsBytes(result));
-        }
-    }
-    class deniedHandler implements AccessDeniedHandler{
-        @Override
-        public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-            Result result = new Result();
-            result.setCode(403);
-            result.setMessage("抱歉，你当前的身份无权访问");
-            httpServletResponse.getOutputStream().write(new ObjectMapper().writeValueAsBytes(result));
-        }
-    }
-    class successHandler implements AuthenticationSuccessHandler{
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-            Result result = new Result();
-            result.setCode(200);
-            result.setMessage("登录成功");
-            httpServletResponse.getOutputStream().write(new ObjectMapper().writeValueAsBytes(result));
-        }
-    }
-    class failureHandler implements AuthenticationFailureHandler {
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-            Result result = new Result();
-            result.setCode(400);
-            result.setMessage(e.getMessage());
-            httpServletResponse.getOutputStream().write(new ObjectMapper().writeValueAsBytes(result));
-        }
-    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

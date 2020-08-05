@@ -1,9 +1,11 @@
 package org.sacc.interact.service.impl;
 
 import org.sacc.interact.entity.Homework;
+import org.sacc.interact.exception.Business;
+import org.sacc.interact.exception.BusinessException;
 import org.sacc.interact.mapper.HomeworkMapper;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.HomeworkService;
-import org.sacc.interact.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,38 +22,38 @@ public class HomeworkServiceImpl implements HomeworkService {
     private HomeworkMapper homeworkMapper;
 
     @Override
-    public ResponseVo<Homework> findByLessonId(Integer lessonId) {
+    public Homework findByLessonId(Integer lessonId) {
         Homework homework = homeworkMapper.selectByLessonId(lessonId);
         if(homework!=null)
-            return ResponseVo.success(homework);
+            return homework;
         else
-            return ResponseVo.error("该lesson_id不存在");
+            throw new BusinessException(Business.LESSON_ID_NOT_EXIST);
     }
 
     @Override
-    public ResponseVo<List<Homework>> findByGroupId(Integer groupId) {
+    public List<Homework> findByGroupId(Integer groupId) {
         List<Homework> homeworkList = homeworkMapper.selectByGroupId(groupId);
         if(homeworkList!=null)
-            return ResponseVo.success(homeworkList);
+            return homeworkList;
         else
-            return ResponseVo.error("该group_id不存在");
+            throw new BusinessException(Business.GROUP_ID_NOT_EXIST);
     }
 
     @Override
-    public ResponseVo publish(Homework homework) {
+    public boolean publish(Homework homework) {
         int i = homeworkMapper.insert(homework);
-        if (i==1)
-            return ResponseVo.success();
+        if(i==1)
+            return true;
         else
-            return ResponseVo.error();
+            throw new BusinessException(Business.INTERNAL_SERVER_ERROR);
     }
 
     @Override
-    public ResponseVo update(Homework homework) {
+    public boolean update(Homework homework) {
         int i = homeworkMapper.updateByPrimaryKeySelective(homework);
         if(i==1)
-            return ResponseVo.success();
+            return true;
         else
-            return ResponseVo.error();
+            throw new BusinessException(Business.INTERNAL_SERVER_ERROR);
     }
 }

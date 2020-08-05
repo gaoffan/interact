@@ -1,9 +1,11 @@
 package org.sacc.interact.mapper;
 
 import org.sacc.interact.entity.Homework;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface HomeworkMapper {
     int deleteByPrimaryKey(Integer id);
 

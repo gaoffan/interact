@@ -1,6 +1,7 @@
 package org.sacc.interact.pojo;
 
 import com.alibaba.fastjson.JSONObject;
+import org.sacc.interact.exception.Business;
 
 public class Result {
 
@@ -82,6 +83,18 @@ public class Result {
         result.setData(null);
         return result;
     }
+    /**
+     * 失败
+     * @param business
+     */
+    public static Result error(Business business) {
+        Result result = new Result();
+        result.setCode(business.getCode());
+        result.setMessage(business.getMessage());
+        result.setData(null);
+        return result;
+    }
+
 
     /**
      * 失败

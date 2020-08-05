@@ -3,11 +3,12 @@ package org.sacc.interact.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.sacc.interact.entity.User;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.model.UserInfo;
 import org.sacc.interact.model.UserRegisterParam;
 import org.sacc.interact.service.UserService;
-import org.sacc.interact.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,17 +28,23 @@ public class UserController {
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
-    public ResponseVo<Boolean> register(@RequestBody @Validated UserRegisterParam userRegisterParam){
-        return ResponseVo.success(userService.register(userRegisterParam));
+    public RestResult<Boolean> register(@RequestBody @Validated UserRegisterParam userRegisterParam){
+        return RestResult.success(userService.register(userRegisterParam));
     }
 
     @ApiOperation("用户信息")
     @GetMapping("/info")
-    public ResponseVo<User> getUserInfo(Authentication authentication){
+    public RestResult<User> getUserInfo(Authentication authentication){
         UserInfo userInfo = (UserInfo)authentication.getPrincipal();
         // 隐藏密码等敏感信息
         userInfo.setPassword("n/a");
         userInfo.setPhoneNumber("n/a");
-        return ResponseVo.success(userInfo);
+        return RestResult.success(userInfo);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/test")
+    public RestResult<Void> test(Authentication authentication){
+        return RestResult.success(null);
     }
 }
