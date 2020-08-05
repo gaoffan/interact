@@ -1,5 +1,6 @@
 package org.sacc.interact.exception;
 
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.pojo.Result;
 import org.sacc.interact.pojo.ResultEnum;
 import org.slf4j.Logger;
@@ -26,9 +27,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public Result Exception(Exception e){
+    public RestResult Exception(Exception e){
         logger.error("未知错误",e);
-        return Result.error(ResultEnum.INTERNAL_SERVER_ERROR);
+        return RestResult.error(ResultEnum.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -37,45 +38,45 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(NullPointerException.class)
-    public Result NullPointerException(NullPointerException e){
+    public RestResult NullPointerException(NullPointerException e){
         logger.error("空指针异常",e);
-        return Result.error(ResultEnum.NULL_POINT);
+        return RestResult.error(ResultEnum.NULL_POINT);
 
     }
     /**
      * 捕获请求方式异常
      */
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    public Result HttpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
+    public RestResult HttpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
         logger.error("错误请求",e);
-        return Result.error(ResultEnum.BAD_REQUEST);
+        return RestResult.error(ResultEnum.BAD_REQUEST);
     }
 
     /**
      * 捕获400异常
      */
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
-    public Result httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
+    public RestResult httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
         logger.error("错误请求",e);
-        return Result.error(ResultEnum.BAD_REQUEST);
+        return RestResult.error(ResultEnum.BAD_REQUEST);
     }
 
     /**
      *捕获数据库操作异常
      */
     @ExceptionHandler(value = SQLException.class)
-    public Result SQLExceptionHandler(SQLException e){
+    public RestResult SQLExceptionHandler(SQLException e){
         logger.error("数据库操作异常:",e);
-        return Result.error(e.getErrorCode(),e.getMessage());
+        return RestResult.error(e.getErrorCode(),e.getMessage());
     }
 
     /**
      *捕获数据校验异常
      */
     @ExceptionHandler(value = BindException.class)
-    public Result bindExceptionHandler(BindException e){
+    public RestResult bindExceptionHandler(BindException e){
         logger.error("数据校验异常",e);
-        return Result.error(ResultEnum.UNSUPPORTED_MEDIA_TYPE);
+        return RestResult.error(ResultEnum.UNSUPPORTED_MEDIA_TYPE);
     }
 
     /**
