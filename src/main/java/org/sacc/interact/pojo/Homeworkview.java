@@ -5,12 +5,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-public class Issue {
+public class Homeworkview {
 
     private int id;
     private int userId;
-    private int groupId;
-    private String content;
+    private int homeworkId;
+    private String remark;
+    private int isShow;
+    private byte[] content;
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss")
@@ -26,14 +28,6 @@ public class Issue {
 
     public int getId() {
         return id;
-    }
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
     }
 
     public void setUserId(int userId) {
@@ -52,7 +46,7 @@ public class Issue {
         return updateTime;
     }
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 
@@ -60,11 +54,35 @@ public class Issue {
         this.createTime = createTime;
     }
 
-    public void setContent(String content) {
+    public void setContent(byte[] content) {
         this.content = content;
     }
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
+
+    public int getHomeworkId() {
+        return homeworkId;
+    }
+
+    public int getIsShow() {
+        return isShow;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setHomeworkId(int homeWorkId) {
+        this.homeworkId = homeWorkId;
+    }
+
+    public void setIsShow(int isShow) {
+        this.isShow = isShow;
+    }
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
 }

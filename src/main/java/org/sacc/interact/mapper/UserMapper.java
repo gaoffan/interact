@@ -16,7 +16,7 @@ public interface UserMapper {
     User selectByEmail(String email);
 
     @Insert({"insert into user (nick,email,password,role,created_at,updated_at) values ",
-    "(#{param.nick,jdbcType=VARCHAR},#{param.email,jdbcType=VARCHAR},#{param.password,jdbcType=VARCHAR},4,NOW(),NOW())"})
+    "(#{param.nick,jdbcType=VARCHAR},#{param.email,jdbcType=VARCHAR},#{param.password,jdbcType=VARCHAR},0,NOW(),NOW())"})
     int insert(@Param("param") UserRegisterParam param);
 
 }

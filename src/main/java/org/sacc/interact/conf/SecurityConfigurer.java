@@ -2,7 +2,6 @@ package org.sacc.interact.conf;
 
 import org.sacc.interact.model.RestResult;
 import org.sacc.interact.util.ResponseUtil;
-import org.sacc.interact.vo.ResponseVo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;

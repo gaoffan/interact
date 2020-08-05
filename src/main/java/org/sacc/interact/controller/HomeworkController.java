@@ -1,9 +1,10 @@
 package org.sacc.interact.controller;
 
 import org.sacc.interact.entity.Homework;
-import org.sacc.interact.mapper.HomeworkMapper;
+import org.sacc.interact.exception.Business;
+import org.sacc.interact.exception.BusinessException;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.HomeworkService;
-import org.sacc.interact.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,39 +27,35 @@ public class HomeworkController {
 
     @GetMapping("/homework/lesson")
     @ResponseBody
-    public ResponseVo<Homework> ShowLessonHomework(@RequestParam("lessonId") Integer lessonId){
-        if(lessonId!=null)
-            return homeworkService.findByLessonId(lessonId);
-        else
-            return ResponseVo.error("未传入参数");
+    public RestResult<Homework> showLessonHomework(@RequestParam("lessonId") Integer lessonId){
+        Homework homework = homeworkService.findByLessonId(lessonId);
+        return RestResult.success(homework);
     }
 
     @GetMapping("/homework/group")
     @ResponseBody
-    public ResponseVo<List<Homework>> ShowGroupHomework(@RequestParam("groupId") Integer groupId){
-        if(groupId!=null)
-            return homeworkService.findByGroupId(groupId);
-        else
-            return ResponseVo.error("未传入参数");
+    public RestResult<List<Homework>> showGroupHomework(@RequestParam("groupId") Integer groupId){
+        List<Homework> homeworkList = homeworkService.findByGroupId(groupId);
+        return RestResult.success(homeworkList);
     }
 
     @PostMapping("/homework/publish")
     @ResponseBody
-    public ResponseVo PublishHomework(@Valid @RequestBody Homework homework, BindingResult bindingResult){
+    public RestResult PublishHomework(@Valid @RequestBody Homework homework, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return ResponseVo.error(Objects.requireNonNull(bindingResult.getFieldError()).getField()+
+            return RestResult.error(-1,Objects.requireNonNull(bindingResult.getFieldError()).getField()+
                     bindingResult.getFieldError().getDefaultMessage());
         }
         else{
             homework.setCreatedAt(new Date());
             homework.setUpdatedAt(new Date());
-            return homeworkService.publish(homework);
+            return RestResult.success(homeworkService.publish(homework));
         }
     }
     @PostMapping("/homework/update")
     @ResponseBody
-    public ResponseVo update(@RequestBody Homework homework){
+    public RestResult update(@RequestBody Homework homework){
         homework.setUpdatedAt(new Date());
-        return homeworkService.update(homework);
+        return RestResult.success(homeworkService.update(homework));
     }
 }
