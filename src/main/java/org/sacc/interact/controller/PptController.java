@@ -1,9 +1,9 @@
 package org.sacc.interact.controller;
 
 import org.sacc.interact.entity.Ppt;
+import org.sacc.interact.model.RestResult;
 import org.sacc.interact.service.PptService;
 import org.sacc.interact.service.impl.PptServiceImpl;
-import org.sacc.interact.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,46 +26,43 @@ public class PptController {
     @Autowired
     private PptServiceImpl pptServiceImpl;
 
-    @Autowired
-    public PptController(PptServiceImpl pptServiceImpl){
-        this.pptServiceImpl=pptServiceImpl;
-    }
 
     @PostMapping("/ppt/downloadById")
-    public Result getById(@RequestParam("id")int id, HttpServletResponse response) throws IOException {
-        if(pptServiceImpl.getById(id,response)){
-            return Result.success(200,"下载成功");
-        }
-        return Result.error(400,"该ppt不存在");
+    public void getById(@RequestParam("id")int id, HttpServletResponse response) throws IOException {
+        pptServiceImpl.getById(id,response);
     }
 
     @PostMapping("/ppt/getAll")
-    public Result<List<Ppt>> getAll(){
-        return pptServiceImpl.getAll();
+    public RestResult<List<Ppt>> getAll(){
+        List<Ppt> pptList=pptServiceImpl.getAll();
+        if(pptList==null||pptList.size()==0){
+            return RestResult.error("没有课件");
+        }
+        return RestResult.success(200,pptList);
     }
 
     @PostMapping("/ppt/upload")
-    public Result insert(@RequestParam("file")MultipartFile file, @RequestParam("lessonId")int lessonId, HttpServletRequest request) throws IOException {
+    public RestResult insert(@RequestParam("file")MultipartFile file, @RequestParam("lessonId")int lessonId, HttpServletRequest request) throws IOException {
         if(pptServiceImpl.addPpt(file,lessonId)){
-            return Result.success(200,"上传成功");
+            return RestResult.success(200,"上传成功");
         }
-            return Result.error(400,"文件类型错误");
+            return RestResult.error(400,"文件类型错误");
     }
 
     @PostMapping("ppt/delete")
-    public Result delete(@RequestParam("id")int id){
+    public RestResult delete(@RequestParam("id")int id){
         if(pptServiceImpl.delete(id)){
-            return Result.success(200,"删除成功");
+            return RestResult.success(200,"删除成功");
         }
-        return Result.error(400,"该记录不存在");
+        return RestResult.error(400,"该记录不存在");
     }
 
     @PostMapping("ppt/update")
-    public Result update(@RequestParam("file")MultipartFile file,@RequestParam("lessonId")int lessonId,@RequestParam("id")int id, HttpServletRequest request) throws IOException {
+    public RestResult update(@RequestParam("file")MultipartFile file,@RequestParam("lessonId")int lessonId,@RequestParam("id")int id, HttpServletRequest request) throws IOException {
 
         if(pptServiceImpl.update(file,lessonId,id)){
-            return Result.success(200,"更新成功");
+            return RestResult.success(200,"更新成功");
         }
-            return Result.error(400,"更新失败");
+            return RestResult.error(400,"更新失败");
     }
 }
