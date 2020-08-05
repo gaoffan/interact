@@ -26,17 +26,16 @@ public interface LessonMapper {
 
     @Update({"UPDATE lesson SET name=#{name},group_id=#{groupId},`desc`=#{desc},time=#{time},location=#{location},type=#{type},live_url=#{liveUrl},created_at=#{createdTime},updated_at=#{updatedTime} WHERE id=#{id}"})
     boolean update(Lesson lesson);
-
     @Delete("DELETE FROM lesson WHERE id=#{id}")
     boolean delete(int id);
-    @Select("SELECT * FROM lesson WHERE name=#{LessonName}")
-    String getLessonUrl(String LessonName);
-    @Update({"UPDATE lesson SET live_url=#{url} where name=#{LessonName}"})
-    int updateUrl(String url,String LessonName);
-    @Select("SELECT url FROM lesson WHERE name=#{LessonName}")
-    String checkUrl(String LessonName);
-    @Update({"UPDATE lesson SET type=#{type} where name=#{LessonName}"})
-    int updateType(String LessonName,int type);
-    @Select("SELECT type FROM lesson WHERE name=#{LessonName}")
-    int checkType(String LessonName);
+    @Select("SELECT * FROM lesson WHERE id=#{id}")
+    String getLessonUrl(String id);
+    @Update({"UPDATE lesson SET live_url=#{url} where id=#{id}"})
+    int updateUrl(String url,String id);
+    @Select("SELECT url FROM lesson WHERE id=#{id}")
+    String checkUrl(String id);
+    @Update({"UPDATE lesson SET type=#{type} where id=#{id}"})
+    int updateType(String id,int type);
+    @Select("SELECT type FROM lesson WHERE id=#{id}")
+    int checkType(String id);
 }
