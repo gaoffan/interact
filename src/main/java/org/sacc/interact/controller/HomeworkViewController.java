@@ -1,7 +1,7 @@
 package org.sacc.interact.controller;
 
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.sacc.interact.model.RestResult;
 import org.sacc.interact.pojo.Homeworkview;
 import org.sacc.interact.service.HomeworkViewService;
@@ -28,6 +28,15 @@ public class HomeworkViewController {
             return RestResult.error("获取失败");
         }else {
             return RestResult.success(pageInfo);
+        }
+    }
+    @GetMapping("/homeworkView/excellentWork")
+    public RestResult<List> getExcellent(@RequestParam("homeworkId") int homeworkId){
+        List list=homeworkViewService.getExcellentWork(homeworkId);
+        if(list==null){
+            return RestResult.error("获取失败");
+        }else {
+            return RestResult.success(list);
         }
     }
     @GetMapping("/homeworkView/menu")
