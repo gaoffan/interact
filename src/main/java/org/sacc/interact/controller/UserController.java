@@ -2,6 +2,7 @@ package org.sacc.interact.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.sacc.interact.entity.User;
 import org.sacc.interact.model.RestResult;
 import org.sacc.interact.model.UserInfo;
@@ -11,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author gaofan
@@ -46,5 +48,25 @@ public class UserController {
     @GetMapping("/test")
     public RestResult<Void> test(Authentication authentication){
         return RestResult.success(null);
+    }
+
+
+    @ApiOperation("头像上传")
+    @PostMapping("/avatarupload")
+    public RestResult avatarup(@RequestParam("avatar")MultipartFile file,@RequestParam("Username")String username){
+        if(file==null){
+            return RestResult.error(404,"文件为空");
+        }
+        String filename=file.getOriginalFilename();
+        String rootpath="";
+        File avatar=new File(rootpath+filename);
+        try {
+            file.transferTo(avatar);
+            userService.updateavatar(avatar.toString(),username);
+            return RestResult.success(200,"上传成功");
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return RestResult.error(404,"上传失败");
     }
 }
