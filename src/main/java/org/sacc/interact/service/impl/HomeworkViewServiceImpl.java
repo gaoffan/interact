@@ -24,6 +24,10 @@ public class HomeworkViewServiceImpl implements HomeworkViewService {
         List<Homeworkview> list=homeworkViewMapper.getHomeworkList(homeworkID);
         return new PageInfo<>(list);
     }
+    @Override
+    public List getExcellentWork(int homeworkId){
+        return homeworkViewMapper.getExcellent(homeworkId);
+    }
 
     @Override
     public Homeworkview getHomeworkview(int submissionId){
