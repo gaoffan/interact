@@ -6,7 +6,7 @@
         select * from user where id= #{id}
 </select>
     <update id="updateUser" parameterType="org.sacc.interact.entity.User">
-        update user set nick = #{nick},phoneNumber = #{phoneNumber},email = #{email},qq = #{qq},avatar= #{avatar}= where id= #{id};
+        update user set nick = #{nick},phoneNumber = #{phone_Number},email = #{email},qq = #{qq},avatar= #{avatar}= where id= #{id};
     </update>
     <update id="updateUserPassword" parameterType="org.sacc.interact.entity.User">
         update user set passowrd = #{password} = where id = #{id};
