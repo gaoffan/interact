@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sacc.interact.mapper.UserInformationMapper">
+    <select id="selectUserById" parameterType="java.lang.Integer" resultType="org.sacc.interact.entity.User">
+        select * from user where id= #{id}
+</select>
+    <update id="updateUser" parameterType="org.sacc.interact.entity.User">
+        update user set nick = #{nick},phoneNumber = #{phoneNumber},email = #{email},qq = #{qq},avatar= #{avatar}= where id= #{id};
+    </update>
+    <update id="updateUserPassword" parameterType="org.sacc.interact.entity.User">
+        update user set passowrd = #{password} = where id = #{id};
+    </update>
+</mapper>
