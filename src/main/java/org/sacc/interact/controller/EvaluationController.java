@@ -1,5 +1,6 @@
 package org.sacc.interact.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.sacc.interact.model.RestResult;
 import org.sacc.interact.model.UserInfo;
 import org.sacc.interact.service.EvaluationService;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
  * Date 2020/8/10 9:44
  */
 @RestController
-public class TeachingEvaluationController {
+public class EvaluationController {
 
     @Autowired
     private EvaluationService evaluationService;
 
+    @ApiOperation("匿名评价")
     @PostMapping("/lesson/evaluate")
     public RestResult evaluate(@RequestParam("lessonId") Integer lessonId,
                                @RequestParam("remark") String remark,

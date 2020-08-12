@@ -27,7 +27,6 @@ public class EvaluationServiceImpl implements EvaluationService {
 
     @Override
     public boolean evaluation(Integer lessonId, String remark, Integer userId) {
-        System.out.println("--------------------------------------------------");
         TeachingEvaluation evaluation = new TeachingEvaluation(lessonId,remark);
         Anonymous anonymous = new Anonymous();
 
