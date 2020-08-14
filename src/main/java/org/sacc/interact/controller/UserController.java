@@ -53,7 +53,7 @@ public class UserController {
 
     @ApiOperation("头像上传")
     @PostMapping("/avatarupload")
-    public RestResult avatarup(@RequestParam("avatar")MultipartFile file,@RequestParam("Username")String username){
+    public RestResult avatarup(@RequestParam("avatar")MultipartFile file,@RequestParam("Userid")String userid){
         if(file==null){
             return RestResult.error(404,"文件为空");
         }
@@ -62,7 +62,7 @@ public class UserController {
         File avatar=new File(rootpath+filename);
         try {
             file.transferTo(avatar);
-            userService.updateavatar(avatar.toString(),username);
+            userService.updateavatar(avatar.toString(),userid);
             return RestResult.success(200,"上传成功");
         }catch (IOException e){
             e.printStackTrace();
