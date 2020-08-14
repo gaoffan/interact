@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root2333
+    password: root
     url: jdbc:mysql://127.0.0.1:3306/interact?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
   servlet:
     multipart:
