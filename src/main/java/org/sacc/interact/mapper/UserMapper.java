@@ -1,9 +1,6 @@
 package org.sacc.interact.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.sacc.interact.entity.User;
 import org.sacc.interact.model.UserRegisterParam;
 
@@ -19,4 +16,7 @@ public interface UserMapper {
     "(#{param.nick,jdbcType=VARCHAR},#{param.email,jdbcType=VARCHAR},#{param.password,jdbcType=VARCHAR},0,NOW(),NOW())"})
     int insert(@Param("param") UserRegisterParam param);
 
+
+    @Update("update user set avatar = #{headpath} where id = #{userid}")
+    boolean updateavatar(String avatarpath,String userid);
 }

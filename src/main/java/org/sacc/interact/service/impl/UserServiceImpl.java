@@ -39,4 +39,9 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         return true;
     }
 
+    @Override
+    public boolean updateavatar(String avatarpath, String username) {
+        return  userMapper.updateavatar(avatarpath,username);
+
+    }
 }
