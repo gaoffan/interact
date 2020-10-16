@@ -23,12 +23,10 @@ public class Lesson {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//出参格式化
     private LocalDateTime time;
 
-    @NotNull(message = "创建时间不能为空")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdTime;
 
-    @NotNull(message = "更新时间不能为空")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedTime;
