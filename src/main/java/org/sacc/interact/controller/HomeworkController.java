@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -47,15 +49,15 @@ public class HomeworkController {
                     bindingResult.getFieldError().getDefaultMessage());
         }
         else{
-            homework.setCreatedAt(new Date());
-            homework.setUpdatedAt(new Date());
+            homework.setCreatedAt(LocalDateTime.now());
+            homework.setUpdatedAt(LocalDateTime.now());
             return RestResult.success(homeworkService.publish(homework));
         }
     }
     @PostMapping("/homework/update")
     @ResponseBody
     public RestResult update(@RequestBody Homework homework){
-        homework.setUpdatedAt(new Date());
+        homework.setUpdatedAt(LocalDateTime.now());
         return RestResult.success(homeworkService.update(homework));
     }
 }

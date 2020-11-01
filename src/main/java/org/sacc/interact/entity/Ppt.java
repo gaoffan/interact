@@ -11,6 +11,7 @@ public class Ppt {
 
     private byte[] content;
 
+    private String fileName;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -60,4 +61,13 @@ public class Ppt {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
 }

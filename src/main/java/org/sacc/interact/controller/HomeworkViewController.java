@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
@@ -65,9 +67,11 @@ public class HomeworkViewController {
 
     @GetMapping("/homeworkView/fileDownload")
     public void downloadFile(@RequestParam("submissionId")int submissionId,
-                                  @RequestParam("fileName")String fileName,
                                   HttpServletResponse response) throws IOException {
         Homeworkview homeworkview=homeworkViewService.getHomeworkview(submissionId);
+        String fileName=homeworkview.getFileName();
+        System.out.println("--------------------------------------------------");
+        System.out.println(fileName);
         byte[] bytes = homeworkview.getContent();
         byte[] fileByte =null;
         if(homeworkViewService.checkType(homeworkview)==1) {  //1是文本 2是zip
@@ -78,7 +82,7 @@ public class HomeworkViewController {
         InputStream inputStream =  new ByteArrayInputStream(fileByte);
         OutputStream outputStream = response.getOutputStream();
         response.setContentType("application/octet-stream;charset=utf-8");
-        response.addHeader("Content-Disposition", "attachment;filename="+fileName);
+        response.setHeader("content-disposition","attachment;filename=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
         IOUtils.copy(inputStream, outputStream);
         outputStream.flush();
     }
