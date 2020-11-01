@@ -27,11 +27,11 @@ public interface LessonMapper {
     boolean update(Lesson lesson);
     @Delete("DELETE FROM lesson WHERE id=#{id}")
     boolean delete(int id);
-    @Select("SELECT * FROM lesson WHERE id=#{id}")
+    @Select("SELECT live_url FROM lesson WHERE id=#{id}")
     String getLessonUrl(String id);
     @Update({"UPDATE lesson SET live_url=#{url} where id=#{id}"})
     int updateUrl(String url,String id);
-    @Select("SELECT url FROM lesson WHERE id=#{id}")
+    @Select("SELECT live_url FROM lesson WHERE id=#{id}")
     String checkUrl(String id);
     @Update({"UPDATE lesson SET type=#{type} where id=#{id}"})
     int updateType(String id,int type);

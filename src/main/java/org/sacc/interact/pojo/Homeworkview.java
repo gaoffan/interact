@@ -11,6 +11,8 @@ public class Homeworkview {
     private int userId;
     private int homeworkId;
     private String remark;
+    private String fileName;
+
     private int isShow;
     private byte[] content;
 
@@ -85,4 +87,11 @@ public class Homeworkview {
         this.remark = remark;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 }

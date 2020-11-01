@@ -18,4 +18,6 @@ public interface HomeworkSubmissionMapper {
     int updateByPrimaryKey(HomeworkSubmission record);
 
     HomeworkSubmission selectByUserId(Integer userId);
+
+    HomeworkSubmission selectByUserIdAndHomeworkId(Integer userId,Integer homeworkId);
 }

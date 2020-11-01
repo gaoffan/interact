@@ -39,6 +39,7 @@ public interface HomeworkViewMapper {
             @Result(column="homework_id", property="homeworkId"),
             @Result(column="is_show",property="isShow"),
             @Result(column="remark",property="remark"),
+            @Result(column="file_name",property="fileName"),
             @Result(column="created_at", property="createTime"),
             @Result(column="update_at", property="updateTime"),
     })

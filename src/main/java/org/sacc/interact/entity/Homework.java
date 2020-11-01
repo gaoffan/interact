@@ -1,9 +1,12 @@
 package org.sacc.interact.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class Homework {
@@ -24,18 +27,26 @@ public class Homework {
     @NotNull
     private Integer submitType;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @NotNull
-    private Date time;
+    private LocalDateTime time;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @NotNull
-    private Date deadline;
+    private LocalDateTime deadline;
 
-    private Date createdAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
-    private Date updatedAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt;
 
 
-    public Homework(Integer id, Integer lessonId, Integer groupId, Integer owner, String name, String desc, Integer submitType, Date time, Date deadline, Date createdAt, Date updatedAt) {
+    public Homework(Integer id, Integer lessonId, Integer groupId, Integer owner, String name, String desc, Integer submitType, LocalDateTime time, LocalDateTime deadline, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.lessonId = lessonId;
         this.groupId = groupId;
