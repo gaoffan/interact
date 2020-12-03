@@ -35,7 +35,7 @@ public class LessonController {
     @ApiOperation("设置某课程是否为直播课")
     @PostMapping("/setLessonType")
     public  RestResult setLessonType(@ApiParam("课程Id")@RequestParam("lessonId")String Id,
-                                     @ApiParam("课程类型1为线下课，2为线上课")@RequestParam("LessonType")int type){
+                                     @ApiParam("课程类型1为线下课，2为线上课")@RequestParam("lessonType")int type){
         lessonMapper.updateType(Id,type);
         if (lessonMapper.checkType(Id)==type){
             return new RestResult(200,"课程类型设置成功");
