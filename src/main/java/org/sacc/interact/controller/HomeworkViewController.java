@@ -7,6 +7,8 @@ import org.sacc.interact.pojo.Homeworkview;
 import org.sacc.interact.service.HomeworkViewService;
 import org.sacc.interact.util.ToolUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -103,4 +105,7 @@ public class HomeworkViewController {
         return RestResult.success("成功");
     }
 
+    /*private ResponseEntity<byte[]> out(){
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).eTag().lastModified().body();
+    }*/
 }

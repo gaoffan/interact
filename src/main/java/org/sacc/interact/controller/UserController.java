@@ -53,7 +53,7 @@ public class UserController {
 
     @ApiOperation("头像上传")
     @PostMapping("/avatarUpload")
-    public RestResult avatarUp(@RequestParam("avatar")MultipartFile file,@RequestParam("userId")String userId){
+    public RestResult avatarUp(@RequestParam("avatar")MultipartFile file,Authentication authentication){
         if(file==null){
             return RestResult.error(404,"文件为空");
         }
@@ -62,11 +62,20 @@ public class UserController {
         File avatar=new File(rootPath+filename);
         try {
             file.transferTo(avatar);
+            UserInfo userInfo = (UserInfo)authentication.getPrincipal();
+            Integer userId = userInfo.getId();
             userService.updateAvatar(avatar.toString(),userId);
             return RestResult.success(200,"上传成功");
         }catch (IOException e){
             e.printStackTrace();
         }
         return RestResult.error(404,"上传失败");
+    }
+
+    @PostMapping("/changePassword")
+    public RestResult<Boolean> changePassword(@RequestParam("password") String password,
+                                           Authentication authentication){
+        UserInfo userInfo = (UserInfo)authentication.getPrincipal();
+        return RestResult.success(userService.changePassword(userInfo.getId(),password));
     }
 }

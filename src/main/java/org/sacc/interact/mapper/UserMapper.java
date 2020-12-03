@@ -18,5 +18,8 @@ public interface UserMapper {
 
 
     @Update("update user set avatar = #{avatarPath} where id = #{userId}")
-    boolean updateAvatar(String avatarPath,String userId);
+    boolean updateAvatar(String avatarPath,Integer userId);
+
+    @Update("update user set password = #{password} where id=#{userId}")
+    boolean changePassword(Integer userId,String password);
 }
