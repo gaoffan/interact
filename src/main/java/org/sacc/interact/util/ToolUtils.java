@@ -33,8 +33,8 @@ public class ToolUtils {
         LocalDateTime now=LocalDateTime.now();
         IssueReply issueReply=new IssueReply();
         issueReply.setContent(issueReplyParam.getContent());
-        issueReply.setIssueId(issueReply.getIssueId());
-        issueReply.setUserId(issueReply.getUserId());
+        issueReply.setIssueId(issueReplyParam.getIssueId());
+        issueReply.setUserId(issueReplyParam.getUserId());
         if(issueReplyParam.isAnonymous()){
             issueReply.setUserId(0);
         }

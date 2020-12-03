@@ -40,8 +40,14 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
-    public boolean updateavatar(String avatarpath, String username) {
-        return  userMapper.updateavatar(avatarpath,username);
+    public boolean updateAvatar(String avatarPath, Integer userId) {
+        return  userMapper.updateAvatar(avatarPath,userId);
 
+    }
+
+    @Override
+    public boolean changePassword(Integer userId,String password) {
+        password=passwordEncoder.encode(password);
+        return userMapper.changePassword(userId,password);
     }
 }

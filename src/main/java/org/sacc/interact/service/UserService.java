@@ -5,5 +5,6 @@ import org.sacc.interact.model.UserRegisterParam;
 
 public interface UserService {
     boolean register(UserRegisterParam userRegisterParam);
-    boolean updateavatar(String avatarpath,String userid);
+    boolean updateAvatar(String avatarPath,Integer userId);
+    boolean changePassword(Integer id,String password);
 }

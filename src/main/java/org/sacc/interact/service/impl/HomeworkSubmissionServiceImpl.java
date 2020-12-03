@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Created by 林夕
@@ -44,7 +44,8 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
         multipartFile.transferTo(new File(dateDirPath, newFileName));*/
         if (isEffective(homeworkId)) {
             byte[] bytes = multipartFile.getBytes();
-            if(upload(bytes, userId, homeworkId)) return true;
+            String fileName=multipartFile.getOriginalFilename();
+            if(upload(bytes, userId, homeworkId,fileName)) return true;
             else throw new BusinessException(Business.INTERNAL_SERVER_ERROR);
         }
         else
@@ -67,32 +68,38 @@ public class HomeworkSubmissionServiceImpl implements HomeworkSubmissionService 
     /**
      * 判断是为上传还是更新
      * */
-    private boolean upload(byte[] bytes,Integer userId,Integer homeworkId){
-        HomeworkSubmission homeworkSubmission = homeworkSubmissionMapper.selectByUserId(userId);
+    private boolean upload(byte[] bytes,Integer userId,Integer homeworkId,String fileName){
+        HomeworkSubmission homeworkSubmission = homeworkSubmissionMapper.selectByUserIdAndHomeworkId(userId,homeworkId);
         if(homeworkSubmission==null){
             HomeworkSubmission h = new HomeworkSubmission();
             h.setUserId(userId);
             h.setHomeworkId(homeworkId);
-            h.setCreatedAt(new Date());
-            h.setUpdateAt(new Date());
+            h.setCreatedAt(LocalDateTime.now());
+            h.setUpdateAt(LocalDateTime.now());
             h.setContent(bytes);
+            h.setFileName(fileName);
+            System.out.println("--------------------------------------------------------");
+            System.out.println(h.getFileName());
             int i = homeworkSubmissionMapper.insertSelective(h);
             return i == 1;
         }
         else {
-            homeworkSubmission.setUpdateAt(new Date());
+            homeworkSubmission.setUpdateAt(LocalDateTime.now());
             homeworkSubmission.setContent(bytes);
             int i = homeworkSubmissionMapper.updateByPrimaryKeySelective(homeworkSubmission);
             return i == 1;
         }
     }
 
+    private boolean upload(byte[] bytes,Integer userId,Integer homeworkId){
+        return upload(bytes,userId,homeworkId,null);
+    }
     /**
      * 判段此次提交是否在提交时间范围内
      */
     private boolean isEffective(Integer homeworkId){
         Homework homework = homeworkMapper.selectByPrimaryKey(homeworkId);
-        Date date = new Date();
-        return homework.getTime().before(date) && homework.getDeadline().after(date);
+        LocalDateTime localDateTime =LocalDateTime.now();
+        return homework.getTime().isBefore(localDateTime) && homework.getDeadline().isAfter(localDateTime);
     }
 }

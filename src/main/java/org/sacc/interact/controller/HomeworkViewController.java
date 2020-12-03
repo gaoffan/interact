@@ -7,10 +7,14 @@ import org.sacc.interact.pojo.Homeworkview;
 import org.sacc.interact.service.HomeworkViewService;
 import org.sacc.interact.util.ToolUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
@@ -65,9 +69,11 @@ public class HomeworkViewController {
 
     @GetMapping("/homeworkView/fileDownload")
     public void downloadFile(@RequestParam("submissionId")int submissionId,
-                                  @RequestParam("fileName")String fileName,
                                   HttpServletResponse response) throws IOException {
         Homeworkview homeworkview=homeworkViewService.getHomeworkview(submissionId);
+        String fileName=homeworkview.getFileName();
+        System.out.println("--------------------------------------------------");
+        System.out.println(fileName);
         byte[] bytes = homeworkview.getContent();
         byte[] fileByte =null;
         if(homeworkViewService.checkType(homeworkview)==1) {  //1是文本 2是zip
@@ -78,7 +84,7 @@ public class HomeworkViewController {
         InputStream inputStream =  new ByteArrayInputStream(fileByte);
         OutputStream outputStream = response.getOutputStream();
         response.setContentType("application/octet-stream;charset=utf-8");
-        response.addHeader("Content-Disposition", "attachment;filename="+fileName);
+        response.setHeader("content-disposition","attachment;filename=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
         IOUtils.copy(inputStream, outputStream);
         outputStream.flush();
     }
@@ -99,4 +105,7 @@ public class HomeworkViewController {
         return RestResult.success("成功");
     }
 
+    /*private ResponseEntity<byte[]> out(){
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).eTag().lastModified().body();
+    }*/
 }

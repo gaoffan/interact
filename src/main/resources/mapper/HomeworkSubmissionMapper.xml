@@ -6,6 +6,7 @@
     <result column="homework_id" jdbcType="INTEGER" property="homeworkId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="content" jdbcType="LONGVARBINARY" property="content" />
+    <result column="file_name" jdbcType="LONGVARBINARY" property="fileName" />
     <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
     <result column="is_show" jdbcType="INTEGER" property="isShow" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
@@ -26,7 +27,7 @@
   </delete>
   <insert id="insert" parameterType="org.sacc.interact.entity.HomeworkSubmission">
     insert into homework_submission (id, homework_id, user_id,
-      content, remark, is_show,
+      content, remark, file_name, is_show,
       created_at, update_at)
     values (#{id,jdbcType=INTEGER}, #{homeworkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
       #{content,jdbcType=LONGVARBINARY}, #{remark,jdbcType=LONGVARCHAR}, #{isShow,jdbcType=INTEGER},
@@ -49,6 +50,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="fileName != null">
+        file_name,
       </if>
       <if test="isShow != null">
         is_show,
@@ -76,6 +80,9 @@
       <if test="remark != null">
         #{remark,jdbcType=LONGVARCHAR},
       </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=LONGVARCHAR},
+      </if>
       <if test="isShow != null">
         #{isShow,jdbcType=INTEGER},
       </if>
@@ -102,6 +109,9 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="fileName != null">
+        file_name = #{file_name,jdbcType=VARCHAR},
+      </if>
       <if test="isShow != null">
         is_show = #{isShow,jdbcType=INTEGER},
       </if>
@@ -120,6 +130,7 @@
       user_id = #{userId,jdbcType=INTEGER},
       content = #{content,jdbcType=LONGVARBINARY},
       remark = #{remark,jdbcType=LONGVARCHAR},
+      file_name = #{fileName,jdbcType=LONGVARCHAR},
       is_show = #{isShow,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP}
@@ -130,5 +141,11 @@
     <include refid="Base_Column_List" />
     from homework_submission
     where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserIdAndHomeworkId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework_submission
+    where user_id = #{userId,jdbcType=INTEGER} and homework_id = #{homeworkId,jdbcType=INTEGER}
   </select>
 </mapper>

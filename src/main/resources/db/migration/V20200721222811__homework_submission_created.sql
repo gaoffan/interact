@@ -3,6 +3,7 @@ CREATE TABLE `homework_submission`  (
        `homework_id` int NOT NULL,
        `user_id` int NOT NULL,
        `content` mediumblob NULL COMMENT '内容（文件/代码）',
+       `file_name` text CHARACTER SET utf8mb4 NULL COMMENT '文件名称',
        `remark` text CHARACTER SET utf8mb4 NULL COMMENT '评价',
        `is_show` int NULL DEFAULT NULL COMMENT '是否作为优秀作业展示',
        `created_at` timestamp(0) NULL DEFAULT NULL COMMENT '创建时间',

@@ -17,6 +17,9 @@ public interface UserMapper {
     int insert(@Param("param") UserRegisterParam param);
 
 
-    @Update("update user set avatar = #{headpath} where id = #{userid}")
-    boolean updateavatar(String avatarpath,String userid);
+    @Update("update user set avatar = #{avatarPath} where id = #{userId}")
+    boolean updateAvatar(String avatarPath,Integer userId);
+
+    @Update("update user set password = #{password} where id=#{userId}")
+    boolean changePassword(Integer userId,String password);
 }

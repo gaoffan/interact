@@ -5,7 +5,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class Homework {
@@ -26,22 +27,27 @@ public class Homework {
     @NotNull
     private Integer submitType;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")//入参格式化
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//出参格式化
-    private Date time;
+    private LocalDateTime time;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")//入参格式化
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//出参格式化
-    private Date deadline;
-
-    private Date createdAt;
-
-    private Date updatedAt;
+    private LocalDateTime deadline;
 
 
-    public Homework(Integer id, Integer lessonId, Integer groupId, Integer owner, String name, String desc, Integer submitType, Date time, Date deadline, Date createdAt, Date updatedAt) {
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt;
+
+
+    public Homework(Integer id, Integer lessonId, Integer groupId, Integer owner, String name, String desc, Integer submitType, LocalDateTime time, LocalDateTime deadline, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.lessonId = lessonId;
         this.groupId = groupId;
