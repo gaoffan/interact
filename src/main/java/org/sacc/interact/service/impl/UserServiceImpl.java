@@ -46,8 +46,41 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
-    public boolean changePassword(Integer userId,String password) {
-        password=passwordEncoder.encode(password);
-        return userMapper.changePassword(userId,password);
+    public boolean changePassword(Integer userId,String oldPassword,String newPassword) {
+        newPassword=passwordEncoder.encode(newPassword);
+        if(passwordEncoder.matches(oldPassword,userMapper.selectById(userId).getPassword())) {
+            return userMapper.changePassword(userId, newPassword);
+        }
+        return false;
+    }
+
+    @Override
+    public UserDetails getUserById(Integer userId) {
+        User user = userMapper.selectById(userId);
+        if(user == null) {
+            throw new UsernameNotFoundException("");
+        }
+        return new UserInfo(user);
+    }
+
+    @Override
+    public boolean changeEmail(Integer id, String oldEmail, String newEmail) {
+        if(oldEmail.equals(userMapper.selectById(id).getEmail())){
+            return userMapper.changeEmail(id,newEmail);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean changeInfo(Integer id, String nickname, String name, String studentId, Integer groupId) {
+        if(nickname!=null)
+            userMapper.changeNick(id,nickname);
+        if(name!=null)
+            userMapper.changeName(id,name);
+        if(studentId!=null)
+            userMapper.changeStudentId(id,studentId);
+        if(groupId!=null)
+            userMapper.changeGroupId(id,groupId);
+        return nickname!=null || name!=null || studentId!=null || groupId != null;
     }
 }

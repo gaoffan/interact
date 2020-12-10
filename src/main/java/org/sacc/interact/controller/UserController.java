@@ -44,6 +44,15 @@ public class UserController {
         return RestResult.success(userInfo);
     }
 
+    @PostMapping("/info")
+    public RestResult<User> getUserInfo(@RequestParam("userId") Integer userId){
+        UserInfo userInfo = (UserInfo)userService.getUserById(userId);
+        // 隐藏密码等敏感信息
+        userInfo.setPassword("n/a");
+        userInfo.setPhoneNumber("n/a");
+        return RestResult.success(userInfo);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/test")
     public RestResult<Void> test(Authentication authentication){
@@ -72,10 +81,29 @@ public class UserController {
         return RestResult.error(404,"上传失败");
     }
 
-    @PostMapping("/changePassword")
-    public RestResult<Boolean> changePassword(@RequestParam("password") String password,
-                                           Authentication authentication){
-        UserInfo userInfo = (UserInfo)authentication.getPrincipal();
-        return RestResult.success(userService.changePassword(userInfo.getId(),password));
+    @PostMapping("/changeInfo")
+    public RestResult<Boolean> changeInfo(@RequestParam(value = "nickname",required = false) String nickname,
+                                          @RequestParam(value = "name",required = false) String name,
+                                          @RequestParam(value = "studentId",required = false) String studentId,
+                                          @RequestParam(value = "department",required = false) Integer groupId,
+                                          Authentication authentication){
+        UserInfo userInfo = (UserInfo) authentication.getPrincipal();
+        return RestResult.success(userService.changeInfo(userInfo.getId(),nickname,name,studentId,groupId));
+    }
+
+    @PostMapping("/changePasswordAndEmail")
+    public RestResult<Boolean> changePassword(@RequestParam(value = "oldPassword",required = false) String oldPassword,
+                                           @RequestParam(value = "newPassword",required = false) String newPassword,
+                                           @RequestParam(value = "oldEmail",required = false) String oldEmail,
+                                           @RequestParam(value = "newEmail",required = false) String newEmail,
+                                           Authentication authentication) {
+        UserInfo userInfo = (UserInfo) authentication.getPrincipal();
+        if (!newPassword.isEmpty()) {
+            return RestResult.success(userService.changePassword(userInfo.getId(), oldPassword,newPassword));
+        }
+        if(!newEmail.isEmpty()){
+            return RestResult.success(userService.changeEmail(userInfo.getId(), oldEmail,newEmail));
+        }
+        return RestResult.error(1006,"参数值为空");
     }
 }
