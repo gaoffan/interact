@@ -11,12 +11,14 @@ import org.sacc.interact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author gaofan
@@ -30,7 +32,11 @@ public class UserController {
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
-    public RestResult<Boolean> register(@RequestBody @Validated UserRegisterParam userRegisterParam){
+    public RestResult<Boolean> register(@RequestBody @Validated UserRegisterParam userRegisterParam, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return RestResult.error(-1, Objects.requireNonNull(bindingResult.getFieldError()).getField()+
+                    bindingResult.getFieldError().getDefaultMessage());
+        }
         return RestResult.success(userService.register(userRegisterParam));
     }
 
