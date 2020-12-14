@@ -64,7 +64,9 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
-    public boolean changeEmail(Integer id, String oldEmail, String newEmail) {
+    public boolean changeEmail(Integer id, String oldEmail, String newEmail,String password) {
+        if(password==null||!passwordEncoder.matches(password,userMapper.selectById(id).getPassword()))
+            throw new BusinessException(Business.PASSWORD_ERROR);
         if(oldEmail.equals(userMapper.selectById(id).getEmail())){
             return userMapper.changeEmail(id,newEmail);
         }

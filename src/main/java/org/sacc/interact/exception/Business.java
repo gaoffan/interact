@@ -15,6 +15,8 @@ public enum Business {
     GROUP_ID_NOT_EXIST(1002,"该group_id不存在")
     ,
     LESSON_ID_NOT_EXIST(1003,"该lesson_id不存在")
+    ,
+    PASSWORD_ERROR(1004,"密码错误");
     ;
     private int code;
     private String message;
