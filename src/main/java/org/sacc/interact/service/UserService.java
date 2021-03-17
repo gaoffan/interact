@@ -9,6 +9,6 @@ public interface UserService {
     boolean updateAvatar(String avatarPath,Integer userId);
     boolean changePassword(Integer id,String oldPassword,String newPassword);
     UserDetails getUserById(Integer userId);
-    boolean changeEmail(Integer id,String oldEmail,String newEmail);
+    boolean changeEmail(Integer id,String oldEmail,String newEmail,String password);
     boolean changeInfo(Integer id,String nickname,String name,String studentId,Integer groupId);
 }

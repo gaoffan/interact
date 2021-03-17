@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.sacc.interact.entity.User;
+import org.sacc.interact.model.ChangePasswordAndEmailForm;
 import org.sacc.interact.model.RestResult;
 import org.sacc.interact.model.UserInfo;
 import org.sacc.interact.model.UserRegisterParam;
@@ -11,6 +12,7 @@ import org.sacc.interact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +32,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @ApiOperation("用户注册")
     @PostMapping("/register")
-    public RestResult<Boolean> register(@RequestBody @Validated UserRegisterParam userRegisterParam, BindingResult bindingResult){
+    public RestResult<Boolean> register(@RequestBody @Validated UserRegisterParam userRegisterParam,
+                                        BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return RestResult.error(-1, Objects.requireNonNull(bindingResult.getFieldError()).getField()+
                     bindingResult.getFieldError().getDefaultMessage());
@@ -88,27 +94,35 @@ public class UserController {
     }
 
     @PostMapping("/changeInfo")
-    public RestResult<Boolean> changeInfo(@RequestParam(value = "nickname",required = false) String nickname,
-                                          @RequestParam(value = "name",required = false) String name,
-                                          @RequestParam(value = "studentId",required = false) String studentId,
-                                          @RequestParam(value = "department",required = false) Integer groupId,
+    public RestResult<Boolean> changeInfo(@RequestBody User user,
+                                          BindingResult bindingResult,
                                           Authentication authentication){
+        if(bindingResult.hasErrors()){
+            return RestResult.error(-1, Objects.requireNonNull(bindingResult.getFieldError()).getField()+
+                    bindingResult.getFieldError().getDefaultMessage());
+        }
         UserInfo userInfo = (UserInfo) authentication.getPrincipal();
-        return RestResult.success(userService.changeInfo(userInfo.getId(),nickname,name,studentId,groupId));
+        return RestResult.success(userService.changeInfo(userInfo.getId(),user.getNick(),user.getName(),user.getStudentId(),user.getGroupId()));
     }
 
     @PostMapping("/changePasswordAndEmail")
-    public RestResult<Boolean> changePassword(@RequestParam(value = "oldPassword",required = false) String oldPassword,
-                                           @RequestParam(value = "newPassword",required = false) String newPassword,
-                                           @RequestParam(value = "oldEmail",required = false) String oldEmail,
-                                           @RequestParam(value = "newEmail",required = false) String newEmail,
-                                           Authentication authentication) {
-        UserInfo userInfo = (UserInfo) authentication.getPrincipal();
-        if (!newPassword.isEmpty()) {
-            return RestResult.success(userService.changePassword(userInfo.getId(), oldPassword,newPassword));
+    public RestResult<Boolean> changePassword(@RequestBody @Validated ChangePasswordAndEmailForm user,
+                                              BindingResult bindingResult,
+                                              Authentication authentication) {
+        if(bindingResult.hasErrors()){
+            return RestResult.error(-1, Objects.requireNonNull(bindingResult.getFieldError()).getField()+
+                    bindingResult.getFieldError().getDefaultMessage());
         }
-        if(!newEmail.isEmpty()){
-            return RestResult.success(userService.changeEmail(userInfo.getId(), oldEmail,newEmail));
+        UserInfo userInfo = (UserInfo) authentication.getPrincipal();
+        if (user.getNewPassword()!=null&&!user.getNewPassword().isEmpty()) {
+            if(userService.changePassword(userInfo.getId(), user.getOldPassword(), user.getNewPassword()))
+                return RestResult.success(true);
+            return RestResult.error(1007,"旧密码填写错误");
+        }
+        if(user.getNewEmail()!=null && !user.getNewEmail().isEmpty()){
+            if(userService.changeEmail(userInfo.getId(), user.getOldEmail(), user.getNewEmail(),user.getPassword()))
+                return RestResult.success(true);
+            return RestResult.error(1007,"旧邮件填写错误");
         }
         return RestResult.error(1006,"参数值为空");
     }
